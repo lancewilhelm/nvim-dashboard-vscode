@@ -24,3 +24,9 @@ Adjust the settings to add your own hotkeys, logo, and messages. This may requir
 - [ ] Additional themes
 - [ ] Recent files
 - [ ] Add more themes
+
+## Credits
+
+- [Nvim Dashboard](https://github.com/nvimdev/dashboard-nvim)
+- [Big Welcome](https://github.com/ArmanDris/big-welcome/tree/master)
+- [VS Code: KeybindingMode](https://github.com/kubenstein/keybinding-mode/tree/master)
