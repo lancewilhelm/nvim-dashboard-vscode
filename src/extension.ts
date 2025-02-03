@@ -4,7 +4,7 @@ const os = require('os');
 import * as vscode from 'vscode';
 
 class Logger {
-    private static outputChannel: vscode.OutputChannel;
+    private static outputChannel: vscode.LogOutputChannel;
 
     public static init(): void {
         Logger.outputChannel = vscode.window.createOutputChannel('Nvim Dashboard', { log: true });

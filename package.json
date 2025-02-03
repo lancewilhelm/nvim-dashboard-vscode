@@ -6,8 +6,26 @@
   "engines": {
     "vscode": "^1.96.0"
   },
+  "author": {
+    "name": "Lance Wilhelm",
+    "email": "lance.wilhelm@gmail.com",
+    "url": "https://lancewilhelm.com"
+  },
+  "repository": {
+    "url": "https://github.com/lancewilhelm/nvim-dashboard-vscode",
+    "type": "git"
+  },
   "categories": [
     "Other"
+  ],
+  "keywords": [
+    "dashboard",
+    "nvim",
+    "neovim",
+    "vim",
+    "ascii",
+    "welcome",
+    "screen"
   ],
   "main": "./out/extension.js",
   "activationEvents": [
@@ -430,9 +448,21 @@
         "nvimDashboard.keybinds": {
           "type": "array",
           "default": [
-            { "letter": "f", "name": "files", "command": "workbench.action.quickOpen" },
-            { "letter": "s", "name": "settings", "command": "workbench.action.openSettings" },
-            { "letter": "q", "name": "exit", "command": "nvim-dashboard.close" }
+            {
+              "letter": "f",
+              "name": "files",
+              "command": "workbench.action.quickOpen"
+            },
+            {
+              "letter": "s",
+              "name": "settings",
+              "command": "workbench.action.openSettings"
+            },
+            {
+              "letter": "q",
+              "name": "exit",
+              "command": "nvim-dashboard.close"
+            }
           ],
           "items": {
             "type": "object"
@@ -446,8 +476,7 @@
         },
         "nvimDashboard.logoText": {
           "type": "string",
-          "default": "██╗   ██╗███████╗ ██████╗ ██████╗ ██████╗ ███████╗\n██║   ██║██╔════╝██╔════╝██╔═══██╗██╔══██╗██╔════╝\n██║   ██║███████╗██║     ██║   ██║██║  ██║█████╗  \n╚██╗ ██╔╝╚════██║██║     ██║   ██║██║  ██║██╔══╝  \n ╚████╔╝ ███████║╚██████╗╚██████╔╝██████╔╝███████╗\n  ╚═══╝  ╚══════╝ ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝"
-,
+          "default": "██╗   ██╗███████╗ ██████╗ ██████╗ ██████╗ ███████╗\n██║   ██║██╔════╝██╔════╝██╔═══██╗██╔══██╗██╔════╝\n██║   ██║███████╗██║     ██║   ██║██║  ██║█████╗  \n╚██╗ ██╔╝╚════██║██║     ██║   ██║██║  ██║██╔══╝  \n ╚████╔╝ ███████║╚██████╗╚██████╔╝██████╔╝███████╗\n  ╚═══╝  ╚══════╝ ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝",
           "description": "Text to display in the logo. Ascii art is supported but it must be a single line. Use \n to separate lines. ChatGPT can be used to convert ascii art to a single line. NOTE: You must paste the ascii art in your settings .json file for it to regonize the new line character."
         },
         "nvimDashboard.bottomText": {
