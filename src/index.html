@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type"
+        content="text/html; charset=utf-8; default-src 'none'; script-src 'unsafe-eval' 'unsafe-inline' vscode-resource:; style-src vscode-resource: 'unsafe-inline';">
+        <style>
+            body {
+                display: flex;
+                font-family: var(--vscode-editor-font-family);
+                font-size: 13pt;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                width: 100vw;
+                overflow: hidden;
+                padding: 0;
+                margin: 0;
+            }
+
+            #content {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            #logo {
+                display: flex;
+                flex-direction: column;
+                white-space: pre;
+                color: var(--vscode-terminal-ansiBrightRed);
+                margin: 0;
+                padding: 0;
+            }
+
+            #keybinds {
+                display: flex;
+                color: var(--vscode-terminal-ansiBrightMagenta);
+                width: 100%;
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            #clock {
+                color: var(--vscode-terminal-ansiBlack);
+            }
+
+            #recent-projects {
+                display: none;
+                flex-direction: column;
+                justify-content: left;
+            }
+
+            .title {
+                color: var(--vscode-terminal-ansiBrightYellow)
+            }
+
+            .workspace {
+                margin-left: 1rem;
+                display: flex;
+                gap: 2rem;
+                justify-content: space-between;
+            }
+
+            .keybind {
+                color: var(--vscode-terminal-ansiBrightMagenta);
+            }
+            
+            #bottom-text {
+                font-style: italic;
+                white-space: pre;
+                text-align: center;
+                color: var(--vscode-terminal-ansiBrightRed);
+            }
+        </style>
+    </head>
+    <body>
+        <div id="content">
+        <div id="logo"></div>
+        <div id="keybinds"></div>
+        <div id="clock"></div>
+        <div id="recent-projects">
+            <div class="title">Recent Projects:</div>
+            <div id="workspaces"></div>
+        </div>
+        <div id="bottom-text"></div>
+    </div>
+        <script>
+            const vscode = acquireVsCodeApi();
+            const previousState = vscode.getState();
+            let workspaces = previousState ? previousState.workspaces : null;
+            let showDateTime = previousState ? previousState.showDateTime : true;
+            let keybinds = previousState ? previousState.keybinds : null;
+            let logoFont = previousState ? previousState.logoFont : null;
+            let logoText = previousState ? previousState.logoText : null;
+            let bottomText = previousState ? previousState.bottomText : null;
+            handleDateTime();
+
+            function addRecentProjects() {
+                // Error checking
+                if (!workspaces || workspaces.length === 0) {
+                    return;
+                }
+
+                // Grab the recent projects div
+                const recentProjectsElement = document.getElementById('recent-projects');
+                const workspacesElement = document.getElementById('workspaces');
+                recentProjectsElement.style.display = 'flex';
+
+                // Create children elements for each workspace
+                workspaces.forEach(item => {
+                    const [ kb, ws ] = item;
+                    // Creat the parent div
+                    const child = document.createElement('div');
+                    child.className = 'workspace';
+
+                    // Create the children divs
+                    const childWs = document.createElement('div');
+                    const childKeybind = document.createElement('div');
+
+                    // Set the text content of the children divs
+                    childWs.textContent = ws; 
+                    childKeybind.textContent = kb;
+
+                    // Assign classes if necessary
+                    childWs.className = 'workspace-child';
+                    childKeybind.className = 'keybind';
+
+                    // Append the children to the parent
+                    child.append(childWs);
+                    child.append(childKeybind);
+
+                    // Append the parent to the recent projects div
+                    workspacesElement.append(child);
+                });
+            }
+
+            function addKeybinds() {
+                // Error checking
+                if (!keybinds || keybinds.length === 0) {
+                    return;
+                }
+
+                // Grab the keybinds div
+                const keybindsElement = document.getElementById('keybinds');
+                keybindsElement.style.display = 'flex';
+
+                // Create children elements for each keybind
+                keybinds.forEach(bind => {
+                    const child = document.createElement('div');
+                    child.textContent = bind.name + '[' + bind.letter + ']';
+                    keybindsElement.append(child);
+                });
+            }
+            // message listener
+            window.addEventListener('message', event => {
+                const message = event.data;
+                
+                // If the message is workspaces, set them
+                if (message.command === 'sendWorkspaces') {
+                    workspaces = message.workspaces;
+                    showDateTime = message.showDateTime;
+                    keybinds = message.keybinds;
+                    logoFont = message.logoFont;
+                    logoText = message.logoText;
+                    bottomText = message.bottomText;
+                    const state = { workspaces, showDateTime, keybinds, logoFont, logoText, bottomText }; 
+                    vscode.setState(state);
+
+                    handleDateTime();
+                    updateLogo();
+                    updateBottomText();
+                    addRecentProjects();
+                    addKeybinds();
+                }
+            })
+
+            // Function to display one random text in the bottom-text div
+            function updateBottomText() {
+                const quote = bottomText[Math.floor(Math.random() * bottomText.length)];
+                document.getElementById('bottom-text').textContent = quote;
+            }
+
+            function clock() {
+                var d = new Date();
+                const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                var month = d.getMonth() + 1;
+                var day = d.getDate();
+                var year = d.getFullYear();
+                var s = d.getSeconds();
+                var m = d.getMinutes();
+                var h = d.getHours();
+                // var time = ('0' + h).substr(-2) + ':' + ('0' + m).substr(-2) + ':' + ('0' + s).substr(-2);
+                var time = ('0' + h).substr(-2) + ':' + ('0' + m).substr(-2);
+                var datetime = day + ' ' + monthNames[month] + ' ' + year + ' | ' + time;
+                document.getElementById('clock').textContent = datetime;
+            }
+
+            function handleDateTime() {
+                if (showDateTime) {
+                    clock();
+                    setInterval(clock, 1000);
+                    document.getElementById('clock').style.display = 'block';
+                } else {
+                    document.getElementById('clock').style.display = 'none';
+                }
+            }
+
+            function updateLogo() {
+                const logo = document.getElementById('logo');
+                logo.style.fontFamily = logoFont;
+                logo.textContent = logoText;
+            }
+
+            // Call the intial functions
+            addRecentProjects();
+            addKeybinds();
+            updateBottomText();
+            updateLogo();
+        </script>
+    </body> 
+</html>

@@ -1,0 +1,485 @@
+{
+  "name": "nvim-dashboard",
+  "displayName": "Nvim Dashboard",
+  "description": "A dashboard welcome screen for VSCode like nvimdev/dashboard-nvim",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.96.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "*"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "nvim-dashboard.open",
+        "title": "Nvim Dashboard: Open"
+      },
+      {
+        "command": "nvim-dashboard.clearWorkspaces",
+        "title": "Nvim Dashboard: Clear recent workspaces"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "nvim-dashboard.toggle",
+        "key": "` `"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "q",
+        "args": {
+          "text": "q"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "w",
+        "args": {
+          "text": "w"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "e",
+        "args": {
+          "text": "e"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "r",
+        "args": {
+          "text": "r"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "t",
+        "args": {
+          "text": "t"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "y",
+        "args": {
+          "text": "y"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "u",
+        "args": {
+          "text": "u"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "i",
+        "args": {
+          "text": "i"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "o",
+        "args": {
+          "text": "o"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "p",
+        "args": {
+          "text": "p"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "@",
+        "args": {
+          "text": "@"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "[",
+        "args": {
+          "text": "["
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "a",
+        "args": {
+          "text": "a"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "s",
+        "args": {
+          "text": "s"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "d",
+        "args": {
+          "text": "d"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "f",
+        "args": {
+          "text": "f"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "g",
+        "args": {
+          "text": "g"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "h",
+        "args": {
+          "text": "h"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "j",
+        "args": {
+          "text": "j"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "k",
+        "args": {
+          "text": "k"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "l",
+        "args": {
+          "text": "l"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": ";",
+        "args": {
+          "text": ";"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": ":",
+        "args": {
+          "text": ":"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "]",
+        "args": {
+          "text": "]"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "z",
+        "args": {
+          "text": "z"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "x",
+        "args": {
+          "text": "x"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "c",
+        "args": {
+          "text": "c"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "v",
+        "args": {
+          "text": "v"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "b",
+        "args": {
+          "text": "b"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "n",
+        "args": {
+          "text": "n"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "m",
+        "args": {
+          "text": "m"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": ",",
+        "args": {
+          "text": ","
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": ".",
+        "args": {
+          "text": "."
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "/",
+        "args": {
+          "text": "/"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "_",
+        "args": {
+          "text": "_"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "1",
+        "args": {
+          "text": "1"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "2",
+        "args": {
+          "text": "2"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "3",
+        "args": {
+          "text": "3"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "4",
+        "args": {
+          "text": "4"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "5",
+        "args": {
+          "text": "5"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "6",
+        "args": {
+          "text": "6"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "7",
+        "args": {
+          "text": "7"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "8",
+        "args": {
+          "text": "8"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "9",
+        "args": {
+          "text": "9"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "0",
+        "args": {
+          "text": "0"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "-",
+        "args": {
+          "text": "-"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "^",
+        "args": {
+          "text": "^"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      },
+      {
+        "command": "nvim-dashboard.handleKey",
+        "key": "¥",
+        "args": {
+          "text": "¥"
+        },
+        "when": "nvim-dashboard:enabled  && !inCommandsPicker && !inQuickInput && !inQuickOpen && !inFilesPicker"
+      }
+    ],
+    "configuration": {
+      "title": "Nvim Dashboard",
+      "properties": {
+        "nvimDashboard.showDateTime": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show date and time"
+        },
+        "nvimDashboard.maxRecentProjects": {
+          "type": "number",
+          "default": 8,
+          "description": "Maximum number of recent projects to show"
+        },
+        "nvimDashboard.keybinds": {
+          "type": "array",
+          "default": [
+            { "letter": "f", "name": "files", "command": "workbench.action.quickOpen" },
+            { "letter": "s", "name": "settings", "command": "workbench.action.openSettings" },
+            { "letter": "q", "name": "exit", "command": "nvim-dashboard.close" }
+          ],
+          "items": {
+            "type": "object"
+          },
+          "description": "Provide a list of commands to show in the dashboard. Commands are given as an object with the following properties: letter, name, command."
+        },
+        "nvimDashboard.logoFont": {
+          "type": "string",
+          "default": "",
+          "description": "Font used for the logo. If blank the default editor font will be used."
+        },
+        "nvimDashboard.logoText": {
+          "type": "string",
+          "default": "██╗   ██╗███████╗ ██████╗ ██████╗ ██████╗ ███████╗\n██║   ██║██╔════╝██╔════╝██╔═══██╗██╔══██╗██╔════╝\n██║   ██║███████╗██║     ██║   ██║██║  ██║█████╗  \n╚██╗ ██╔╝╚════██║██║     ██║   ██║██║  ██║██╔══╝  \n ╚████╔╝ ███████║╚██████╗╚██████╔╝██████╔╝███████╗\n  ╚═══╝  ╚══════╝ ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝"
+,
+          "description": "Text to display in the logo. Ascii art is supported but it must be a single line. Use \n to separate lines. ChatGPT can be used to convert ascii art to a single line. NOTE: You must paste the ascii art in your settings .json file for it to regonize the new line character."
+        },
+        "nvimDashboard.bottomText": {
+          "type": "array",
+          "default": [
+            "Welcome to your dashboard"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Text to display at the bottom of the dashboard. If more than one line is provided a random line will be selected each time the dashboard is opened."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.96.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "@typescript-eslint/eslint-plugin": "^8.17.0",
+    "@typescript-eslint/parser": "^8.17.0",
+    "eslint": "^9.16.0",
+    "typescript": "^5.7.2",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1"
+  }
+}
