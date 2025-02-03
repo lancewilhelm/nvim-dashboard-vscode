@@ -3,7 +3,7 @@
   "displayName": "Nvim Dashboard",
   "description": "A dashboard welcome screen for VSCode like nvimdev/dashboard-nvim",
   "publisher": "lancewilhelm",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "engines": {
     "vscode": "^1.96.0"
   },
