@@ -38,6 +38,7 @@ const logoText: string | undefined = config.get('logoText');
 const bottomText: string[] | undefined = config.get('bottomText');
 const workspaceLimit: number | undefined = config.get('maxRecentProjects');
 const filesLimit: number | undefined = config.get('maxRecentFiles');
+const fontSize: number | undefined = config.get('fontSize');
 const keybindsConfig:
     | { letter: string; name: string; command: string }[]
     | undefined = config.get('keybinds');
@@ -301,6 +302,7 @@ function sendInformationtoFrontEnd(
         logoFont: logoFont,
         logoText: logoText,
         bottomText: bottomText,
+        fontSize: fontSize,
     });
 }
 

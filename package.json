@@ -3,7 +3,7 @@
   "displayName": "Nvim Dashboard",
   "description": "A dashboard welcome screen for VSCode like nvimdev/dashboard-nvim",
   "publisher": "lancewilhelm",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "engines": {
     "vscode": "^1.96.0"
   },
@@ -455,6 +455,10 @@
           "type": "number",
           "default": 8,
           "description": "Maximum number of recent files to show. Set to 0 to disable"
+        },
+        "nvimDashboard.fontSize": {
+          "type": "number",
+          "default": 13
         },
         "nvimDashboard.keybinds": {
           "type": "array",

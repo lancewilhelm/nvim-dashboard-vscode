@@ -112,6 +112,10 @@
             let logoFont = previousState ? previousState.logoFont : null;
             let logoText = previousState ? previousState.logoText : null;
             let bottomText = previousState ? previousState.bottomText : [];
+            let fontSize = previousState ? previousState.fontSize : '13pt';
+
+            // Set some initial things based on the state
+            document.getElementsByTagName('body')[0].style.fontSize = fontSize.toString() + 'pt';
             handleDateTime();
 
             function addRecentProjects() {
@@ -226,9 +230,11 @@
                     logoFont = message.logoFont;
                     logoText = message.logoText;
                     bottomText = message.bottomText;
-                    const state = { workspaces, files, showDateTime, keybinds, logoFont, logoText, bottomText };
+                    fontSize = message.fontSize;
+                    const state = { workspaces, files, showDateTime, keybinds, logoFont, logoText, bottomText, fontSize };
                     vscode.setState(state);
 
+                    document.getElementsByTagName('body')[0].style.fontSize = fontSize.toString() + 'pt';
                     handleDateTime();
                     updateLogo();
                     updateBottomText();
