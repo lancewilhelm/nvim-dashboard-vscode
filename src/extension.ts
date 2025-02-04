@@ -27,6 +27,7 @@ class Logger {
 }
 Logger.init();
 
+
 // Get preferences
 const config = vscode.workspace.getConfiguration('nvimDashboard');
 const showDateTime: boolean | undefined = config.get('showDateTime');
@@ -146,8 +147,9 @@ function showWelcomePage(
     // Panel handlers
     panel.onDidChangeViewState((e) => {
         let visible = e.webviewPanel.visible;
-        Logger.debug(`Dashboard Visible: ${visible}`);
-        if (!visible) {
+        let active = e.webviewPanel.active;
+        Logger.debug(`Dashboard Visible: ${visible}, Active: ${active}`);
+        if (!active) {
             enabled = false;
             vscode.commands.executeCommand(
                 'setContext',
