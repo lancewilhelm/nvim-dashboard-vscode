@@ -7,17 +7,20 @@ class Logger {
     private static outputChannel: vscode.LogOutputChannel;
 
     public static init(): void {
-        Logger.outputChannel = vscode.window.createOutputChannel('Nvim Dashboard', { log: true });
+        Logger.outputChannel = vscode.window.createOutputChannel(
+            'Nvim Dashboard',
+            { log: true }
+        );
     }
     public static error(msg: string): void {
         Logger.outputChannel.error(msg);
     }
-    public static warn(msg: string): void { 
+    public static warn(msg: string): void {
         Logger.outputChannel.warn(msg);
     }
     public static info(msg: string): void {
         Logger.outputChannel.info(msg);
-    }   
+    }
     public static debug(msg: string): void {
         Logger.outputChannel.debug(msg);
     }
@@ -27,7 +30,6 @@ class Logger {
 }
 Logger.init();
 
-
 // Get preferences
 const config = vscode.workspace.getConfiguration('nvimDashboard');
 const showDateTime: boolean | undefined = config.get('showDateTime');
@@ -35,13 +37,18 @@ const logoFont: string | undefined = config.get('logoFont');
 const logoText: string | undefined = config.get('logoText');
 const bottomText: string[] | undefined = config.get('bottomText');
 const workspaceLimit: number | undefined = config.get('maxRecentProjects');
-const keybindsConfig: { letter: string, name: string, command: string }[] | undefined = config.get('keybinds');
+const filesLimit: number | undefined = config.get('maxRecentFiles');
+const keybindsConfig:
+    | { letter: string; name: string; command: string }[]
+    | undefined = config.get('keybinds');
 let keybinds: { [key: string]: string } = {};
-keybindsConfig?.forEach((keybind: { letter: string, name: string, command: string}) => {
-    keybinds[keybind.letter] = keybind.command;
-});
+keybindsConfig?.forEach(
+    (keybind: { letter: string; name: string; command: string }) => {
+        keybinds[keybind.letter] = keybind.command;
+    }
+);
 let workspaceKeybinds: Map<string, string>;
-
+let fileKeybinds: Map<string, string>;
 
 /**
  * Gets the html content of the dashboard
@@ -62,7 +69,6 @@ function getHtmlContent(context: vscode.ExtensionContext) {
 function expandHomeDir(unexpanded_path: string) {
     Logger.debug(`Expanding home directory in path: ${unexpanded_path}`);
     if (unexpanded_path.startsWith('~')) {
-        // Replace '~' with the full path to the user's home directory
         return path.join(os.homedir(), unexpanded_path.slice(1));
     }
 
@@ -70,14 +76,38 @@ function expandHomeDir(unexpanded_path: string) {
 }
 
 /**
+ * Takes a full path and condenses down to home dir notation '~'
+ * @param expandedPath {string} - the path to condense
+ * @returns {string} - condensed path
+ */
+function condenseHomeDir(expandedPath: string) {
+    Logger.debug(`Condensing home directory in path: ${expandedPath}`);
+    if (!expandedPath.startsWith('~')) {
+        const homeDirectory = os.homedir();
+        return expandedPath.replace(homeDirectory, '~');
+    }
+}
+
+/**
  * Opens a workspace in vscode
  * @param unexpanded_path {string} - The path to the workspace
  */
-function openWorkspaceFunction(unexpanded_path: string) {
+function openWorkspace(unexpanded_path: string) {
     Logger.info(`Opening workspace: ${unexpanded_path}`);
     const path = expandHomeDir(unexpanded_path);
     const workspaceUri = vscode.Uri.file(path);
     vscode.commands.executeCommand('vscode.openFolder', workspaceUri);
+}
+
+/**
+ * Opens a file in vscode
+ * @param unexpanded_path {string} - The path to the file
+ */
+function openFile(unexpanded_path: string) {
+    Logger.info(`Opening file: ${unexpanded_path}`);
+    const path = expandHomeDir(unexpanded_path);
+    const fileUri = vscode.Uri.file(path);
+    vscode.commands.executeCommand('vscode.open', fileUri);
 }
 
 /**
@@ -95,12 +125,21 @@ function cleanWorkspaces(context: vscode.ExtensionContext) {
 }
 
 /**
- * Clears the workspaces from the context
+ * Clears the workspaces from the global state
  * @param context {vscode.ExtensionContext} - The context of the extension
  */
-function clearWorkspaces(context: vscode.ExtensionContext) {
-    Logger.info('Clearing workspaces');
+function clearRecentWorkspaces(context: vscode.ExtensionContext) {
+    Logger.info('Clearing recent workspaces from global state');
     context.globalState.update('workspace', []);
+}
+
+/**
+ * Clears the workspaces from the global state
+ * @param context {vscode.ExtensionContext} - The context of the extension
+ */
+function clearRecentFiles(context: vscode.ExtensionContext) {
+    Logger.info('Clearing recent files from global state');
+    context.globalState.update('files', []);
 }
 
 /**
@@ -165,6 +204,7 @@ function showWelcomePage(
             );
         }
     });
+    
     panel.onDidDispose((e) => {
         Logger.debug(`Dashboard Disposed`);
         enabled = false;
@@ -182,43 +222,50 @@ function showWelcomePage(
  * Saves the current workspace to the context
  * @param context {vscode.ExtensionContext} - The context of the extension
  */
-function saveWorkspace(context: vscode.ExtensionContext) {
+function saveWorkspaceToState(context: vscode.ExtensionContext) {
     const homeDirectory = os.homedir();
     const workspace = vscode.workspace.workspaceFolders?.map((folder) =>
         folder.uri.fsPath.replace(homeDirectory, '~')
     );
-
     if (!workspace || workspace.length === 0) {
         return;
     }
 
-    const first_folder = workspace[0];
+    Logger.info(`Saving ${workspace[0]} to global state.`);
+    const firstFolder = workspace[0];
+    const oldWorkspace = context.globalState.get('workspace', []);
+    const filteredWorkspaces = oldWorkspace.filter((f) => f !== firstFolder);
+    const updatedWorkspace = [...filteredWorkspaces, firstFolder].reverse();
+    context.globalState.update('workspace', updatedWorkspace);
+}
 
-    const old_workspace = context.globalState.get('workspace', []);
+function saveFileToState(context: vscode.ExtensionContext, file: string) {
+    const newFile = condenseHomeDir(file);
+    if (!newFile) {
+        return;
+    }
 
-    const filtered_workspace = old_workspace.filter(
-        (folder) => folder !== first_folder
-    );
-
-    const updated_workspace = [...filtered_workspace, first_folder];
-
-    context.globalState.update('workspace', updated_workspace);
+    Logger.info(`Saving ${newFile} to global state`);
+    const oldFiles = context.globalState.get('files', []);
+    const filteredFiles = oldFiles.filter((f) => f !== newFile);
+    const updatedFiles = [...filteredFiles, newFile].reverse().slice(0,26);
+    context.globalState.update('files', updatedFiles);
 }
 
 function sendInformationtoFrontEnd(
     context: vscode.ExtensionContext,
     panel: vscode.WebviewPanel
 ) {
-    // Get the workspaces and reverse the order
-    const workspaces = context.globalState
-        .get('workspace', []);
+    // Get the recent workspaces and files
+    const workspaces = context.globalState.get('workspace', []);
+    const files = context.globalState.get('files', []);
 
     // Get current list of taken keybinds
     const keybindKeys = Object.keys(keybinds);
 
     // Create a new keybind for each of the workspaces
-    workspaceKeybinds = new Map();
-    [...workspaces].slice(0, workspaceLimit).forEach((workspace: string) => {
+    workspaceKeybinds = new Map()
+    ;[...workspaces].slice(0, workspaceLimit).forEach((workspace: string) => {
         const name: string | undefined = workspace.split('/').pop();
         const nameLetters = name?.split('');
         for (const letter of nameLetters || []) {
@@ -229,9 +276,26 @@ function sendInformationtoFrontEnd(
             }
         }
     });
+
+    // Create a new keybind for each of the workspaces
+    fileKeybinds = new Map()
+    ;[...files].slice(0, filesLimit).forEach((file: string) => {
+        const name: string | undefined = file.split('/').pop();
+        const nameLetters = name?.split('');
+        for (const letter of nameLetters || []) {
+            if (!keybindKeys.includes(letter)) {
+                fileKeybinds.set(letter, file);
+                keybindKeys.push(letter);
+                break;
+            }
+        }
+    });
+
+    // Pose the message to the webview panel
     panel.webview.postMessage({
         command: 'sendWorkspaces',
         workspaces: Array.from(workspaceKeybinds),
+        files: Array.from(fileKeybinds),
         keybinds: keybindsConfig,
         showDateTime: showDateTime,
         logoFont: logoFont,
@@ -240,12 +304,14 @@ function sendInformationtoFrontEnd(
     });
 }
 
-function getCommand(letter: string): string | undefined{
+function getCommand(letter: string): string | undefined {
     const command = keybinds[letter];
     if (keybinds[letter]) {
         return keybinds[letter];
     } else if (workspaceKeybinds.has(letter)) {
         return 'openWorkspace';
+    } else if (fileKeybinds.has(letter)) {
+        return 'openFile';
     }
 }
 
@@ -256,8 +322,17 @@ let enabled = false;
  */
 export function activate(context: vscode.ExtensionContext) {
     Logger.info('Activating extension');
-    let panel: vscode.WebviewPanel;
-    saveWorkspace(context);
+    let dashboard: vscode.WebviewPanel;
+    saveWorkspaceToState(context);
+    const activeFile = vscode.window.activeTextEditor?.document.fileName;
+    activeFile ? saveFileToState(context, activeFile) : null;
+
+    // Create a listener for active text editor changes to log recent files to global state
+    vscode.window.onDidChangeActiveTextEditor((e) => {
+        if (e) {
+            saveFileToState(context, e.document.fileName);
+        }
+    });
 
     // Register commands
     let commandShowWelcome = vscode.commands.registerCommand(
@@ -271,7 +346,7 @@ export function activate(context: vscode.ExtensionContext) {
                     'nvim-dashboard:enabled',
                     true
                 );
-                panel = showWelcomePage(context);
+                dashboard = showWelcomePage(context);
             }
         }
     );
@@ -281,20 +356,30 @@ export function activate(context: vscode.ExtensionContext) {
     let commandHandleKey = vscode.commands.registerCommand(
         'nvim-dashboard.handleKey',
         function ({ text: letter }: { text: string }) {
-            Logger.info(`Command nvim-dashboard.handleKey called with letter: ${letter}`);
+            Logger.info(
+                `Command nvim-dashboard.handleKey called with letter: ${letter}`
+            );
             if (!enabled) {
                 return;
             }
             const command = getCommand(letter);
             if (command) {
                 if (command === 'nvim-dashboard.close') {
-                    panel.dispose();
+                    dashboard.dispose();
                     return;
                 } else if (command === 'openWorkspace') {
                     if (workspaceKeybinds.get(letter)) {
                         const workspacePath = workspaceKeybinds.get(letter);
                         if (workspacePath) {
-                            openWorkspaceFunction(workspacePath);
+                            openWorkspace(workspacePath);
+                        }
+                    }
+                } else if (command === 'openFile') {
+                    if (fileKeybinds.get(letter)) {
+                        const filePath = fileKeybinds.get(letter);
+                        if (filePath) {
+                            openFile(filePath);
+                            dashboard.dispose();    // close the dashboard
                         }
                     }
                 } else {
@@ -306,15 +391,25 @@ export function activate(context: vscode.ExtensionContext) {
     Logger.info('Registering command nvim-dashboard.handleKey');
     context.subscriptions.push(commandHandleKey);
 
-    let commandClearWorkspaces = vscode.commands.registerCommand(
-        'nvim-dashboard.clearWorkspaces',
+    let commandClearRecentWorkspaces = vscode.commands.registerCommand(
+        'nvim-dashboard.clearRecentWorkspaces',
         function () {
-            Logger.info('Command nvim-dashboard.clearWorkspaces called');
-            clearWorkspaces(context);
+            Logger.info('Command nvim-dashboard.clearRecentWorkspaces called');
+            clearRecentWorkspaces(context);
         }
     );
-    Logger.info('Registering command nvim-dashboard.clearWorkspaces');
-    context.subscriptions.push(commandClearWorkspaces);
+    Logger.info('Registering command nvim-dashboard.clearRecentWorkspaces');
+    context.subscriptions.push(commandClearRecentWorkspaces);
+
+    let commandClearRecentFiles = vscode.commands.registerCommand(
+        'nvim-dashboard.clearRecentFiles',
+        function () {
+            Logger.info('Command nvim-dashboard.clearRecentFiles called');
+            clearRecentFiles(context);
+        }
+    );
+    Logger.info('Registering command nvim-dashboard.clearRecentFiles');
+    context.subscriptions.push(commandClearRecentFiles);
 
     const hasOpenWorkspace =
         vscode.workspace.workspaceFolders &&
@@ -332,8 +427,9 @@ export function activate(context: vscode.ExtensionContext) {
         return;
     }
 
+    // Build the webpanel
     Logger.info('Enabling dashboard');
-    panel = showWelcomePage(context);
+    dashboard = showWelcomePage(context);
     vscode.commands.executeCommand('setContext', 'nvim-dashboard:enabled', true);
     enabled = true;
 }

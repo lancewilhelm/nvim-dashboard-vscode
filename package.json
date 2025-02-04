@@ -40,8 +40,12 @@
         "title": "Nvim Dashboard: Open"
       },
       {
-        "command": "nvim-dashboard.clearWorkspaces",
+        "command": "nvim-dashboard.clearRecentWorkspaces",
         "title": "Nvim Dashboard: Clear recent workspaces"
+      },
+      {
+        "command": "nvim-dashboard.clearRecentFiles",
+        "title": "Nvim Dashboard: Clear recent files"
       }
     ],
     "keybindings": [
@@ -445,7 +449,12 @@
         "nvimDashboard.maxRecentProjects": {
           "type": "number",
           "default": 8,
-          "description": "Maximum number of recent projects to show"
+          "description": "Maximum number of recent projects to show. Set to 0 to disable."
+        },
+        "nvimDashboard.maxRecentFiles": {
+          "type": "number",
+          "default": 8,
+          "description": "Maximum number of recent files to show. Set to 0 to disable"
         },
         "nvimDashboard.keybinds": {
           "type": "array",

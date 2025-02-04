@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
     <head>
         <meta http-equiv="Content-Type"
-        content="text/html; charset=utf-8; default-src 'none'; script-src 'unsafe-eval' 'unsafe-inline' vscode-resource:; style-src vscode-resource: 'unsafe-inline';">
+            content="text/html; charset=utf-8; default-src 'none'; script-src 'unsafe-eval' 'unsafe-inline' vscode-resource:; style-src vscode-resource: 'unsafe-inline';">
         <style>
             body {
                 display: flex;
@@ -45,17 +46,26 @@
                 color: var(--vscode-terminal-ansiBlack);
             }
 
-            #recent-projects {
+            #recent {
                 display: none;
                 flex-direction: column;
                 justify-content: left;
+                gap: 1rem;
+            }
+
+            #recent-projects,
+            #recent-files {
+                display: flex;
+                flex-direction: column;
+                display: none;
             }
 
             .title {
                 color: var(--vscode-terminal-ansiBrightYellow)
             }
 
-            .workspace {
+            .workspace,
+            .file {
                 margin-left: 1rem;
                 display: flex;
                 gap: 2rem;
@@ -65,7 +75,7 @@
             .keybind {
                 color: var(--vscode-terminal-ansiBrightMagenta);
             }
-            
+
             #bottom-text {
                 font-style: italic;
                 white-space: pre;
@@ -74,26 +84,34 @@
             }
         </style>
     </head>
+
     <body>
         <div id="content">
-        <div id="logo"></div>
-        <div id="keybinds"></div>
-        <div id="clock"></div>
-        <div id="recent-projects">
-            <div class="title">Recent Projects:</div>
-            <div id="workspaces"></div>
+            <div id="logo"></div>
+            <div id="keybinds"></div>
+            <div id="clock"></div>
+            <div id="recent">
+                <div id="recent-projects">
+                    <div class="title">Recent Projects:</div>
+                    <div id="workspaces"></div>
+                </div>
+                <div id="recent-files">
+                    <div class="title">Recent Files:</div>
+                    <div id="files"></div>
+                </div>
+            </div>
+            <div id="bottom-text"></div>
         </div>
-        <div id="bottom-text"></div>
-    </div>
         <script>
             const vscode = acquireVsCodeApi();
             const previousState = vscode.getState();
             let workspaces = previousState ? previousState.workspaces : null;
+            let files = previousState ? previousState.files : null;
             let showDateTime = previousState ? previousState.showDateTime : true;
             let keybinds = previousState ? previousState.keybinds : null;
             let logoFont = previousState ? previousState.logoFont : null;
             let logoText = previousState ? previousState.logoText : null;
-            let bottomText = previousState ? previousState.bottomText : null;
+            let bottomText = previousState ? previousState.bottomText : [];
             handleDateTime();
 
             function addRecentProjects() {
@@ -103,13 +121,15 @@
                 }
 
                 // Grab the recent projects div
+                const recentElement = document.getElementById('recent');
                 const recentProjectsElement = document.getElementById('recent-projects');
                 const workspacesElement = document.getElementById('workspaces');
                 recentProjectsElement.style.display = 'flex';
+                recentElement.style.display = 'flex';
 
                 // Create children elements for each workspace
                 workspaces.forEach(item => {
-                    const [ kb, ws ] = item;
+                    const [kb, ws] = item;
                     // Creat the parent div
                     const child = document.createElement('div');
                     child.className = 'workspace';
@@ -119,7 +139,7 @@
                     const childKeybind = document.createElement('div');
 
                     // Set the text content of the children divs
-                    childWs.textContent = ws; 
+                    childWs.textContent = ws;
                     childKeybind.textContent = kb;
 
                     // Assign classes if necessary
@@ -132,6 +152,47 @@
 
                     // Append the parent to the recent projects div
                     workspacesElement.append(child);
+                });
+            }
+
+            function addRecentFiles() {
+                // Error checking
+                if (!files || files.length === 0) {
+                    return;
+                }
+
+                // Grab the recent projects div
+                const recentElement = document.getElementById('recent');
+                const recentFilesElement = document.getElementById('recent-files');
+                const filesElement = document.getElementById('files');
+                recentFilesElement.style.display = 'flex';
+                recentElement.style.display = 'flex';
+
+                // Create children elements for each workspace
+                files.forEach(item => {
+                    const [kb, f] = item;
+                    // Creat the parent div
+                    const child = document.createElement('div');
+                    child.className = 'file';
+
+                    // Create the children divs
+                    const childF = document.createElement('div');
+                    const childKeybind = document.createElement('div');
+
+                    // Set the text content of the children divs
+                    childF.textContent = f;
+                    childKeybind.textContent = kb;
+
+                    // Assign classes if necessary
+                    childF.className = 'file-child';
+                    childKeybind.className = 'keybind';
+
+                    // Append the children to the parent
+                    child.append(childF);
+                    child.append(childKeybind);
+
+                    // Append the parent to the recent projects div
+                    filesElement.append(child);
                 });
             }
 
@@ -155,29 +216,36 @@
             // message listener
             window.addEventListener('message', event => {
                 const message = event.data;
-                
+
                 // If the message is workspaces, set them
                 if (message.command === 'sendWorkspaces') {
                     workspaces = message.workspaces;
+                    files = message.files;
                     showDateTime = message.showDateTime;
                     keybinds = message.keybinds;
                     logoFont = message.logoFont;
                     logoText = message.logoText;
                     bottomText = message.bottomText;
-                    const state = { workspaces, showDateTime, keybinds, logoFont, logoText, bottomText }; 
+                    const state = { workspaces, files, showDateTime, keybinds, logoFont, logoText, bottomText };
                     vscode.setState(state);
 
                     handleDateTime();
                     updateLogo();
                     updateBottomText();
                     addRecentProjects();
+                    addRecentFiles();
                     addKeybinds();
                 }
             })
 
             // Function to display one random text in the bottom-text div
             function updateBottomText() {
-                const quote = bottomText[Math.floor(Math.random() * bottomText.length)];
+                let quote;
+                if (bottomText.length > 1) {
+                    quote = bottomText[Math.floor(Math.random() * bottomText.length)];
+                } else {
+                    quote = bottomText[0];
+                }
                 document.getElementById('bottom-text').textContent = quote;
             }
 
@@ -214,9 +282,11 @@
 
             // Call the intial functions
             addRecentProjects();
+            addRecentFiles();
             addKeybinds();
             updateBottomText();
             updateLogo();
         </script>
-    </body> 
+    </body>
+
 </html>
