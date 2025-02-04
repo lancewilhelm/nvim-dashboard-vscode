@@ -22,7 +22,7 @@ Adjust the settings to add your own hotkeys, logo, and messages. This may requir
 - [x] Customizable bottom message
 - [ ] Color customization
 - [ ] Additional themes
-- [ ] Recent files
+- [x] Recent files
 - [ ] Add more themes
 
 ## Credits
