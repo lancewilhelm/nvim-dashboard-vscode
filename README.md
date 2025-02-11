@@ -12,7 +12,7 @@ A simple text based dashboard for VS Code inspired by [Nvim Dashboard](https://g
 
 ## Usage
 
-Adjust the settings to add your own hotkeys, logo, and messages. This may require some knowledge of the [VS Code API](https://code.visualstudio.com/api) and how to modify your settings JSON file.
+Adjust the settings to add your own hotkeys, logo, and messages. This may require some knowledge of the [VS Code API](https://code.visualstudio.com/api) and how to modify your settings JSON file. You may need to reload the window to see changes ("Developer: Reload Window" in the command palette).
 
 ## Plans
 
@@ -20,10 +20,14 @@ Adjust the settings to add your own hotkeys, logo, and messages. This may requir
 - [x] Customizable hotkeys
 - [x] Customizable ascii art logo
 - [x] Customizable bottom message
+- [x] Recent files
 - [ ] Color customization
 - [ ] Additional themes
-- [x] Recent files
-- [ ] Add more themes
+- [ ] Solve the issue of hotkeys being active when side bars are open and focused
+
+## Known Issues
+
+- I have not found a way to detect when the focus of the user has shifted from the dashboard to a different view (e.g., side bars, terminal, etc.). According to [this github issue](https://github.com/microsoft/vscode/issues/230419), this does not seem like it will be solved. This means that if you have the dashboard open and try to use a side bar or other view, the hotkeys will still be active. The only way to deactivate the hotkeys is to close the dashboard.
 
 ## Credits
 

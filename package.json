@@ -3,7 +3,7 @@
   "displayName": "Nvim Dashboard",
   "description": "A dashboard welcome screen for VSCode like nvimdev/dashboard-nvim",
   "publisher": "lancewilhelm",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "engines": {
     "vscode": "^1.96.0"
   },
@@ -444,7 +444,12 @@
         "nvimDashboard.showDateTime": {
           "type": "boolean",
           "default": true,
-          "description": "Show date and time"
+          "description": "Show date and time. (Reload required)"
+        },
+        "nvimDashboard.openOnNoTabs": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show the dashboard when all tabs have been closed. Only opens when the last open tab is closed."
         },
         "nvimDashboard.maxRecentProjects": {
           "type": "number",

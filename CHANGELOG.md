@@ -4,6 +4,14 @@ All notable changes to the "nvim-dashboard" extension will be documented in this
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.1.3]
+
+- Changed dashboard behavior on workspace open to map to new 'onNoTabs' setting. Previously the dashboard would never open when a workspace was opened.
+
+## [0.1.2]
+
+- Added setting item to allow the dashboard to reopen when the last file is closed
+
 ## [0.1.1]
 
 - Added support for font size
