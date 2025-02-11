@@ -330,9 +330,6 @@ export function activate(context: vscode.ExtensionContext) {
   const activeFile = vscode.window.activeTextEditor?.document.fileName;
   activeFile ? saveFileToState(context, activeFile) : null;
 
-  vscode.workspace.((e) => {
-    console.log(e);
-  });
   // Create a listener for active text editor changes to log recent files to global state
   // and open the dashboard if no tabs are open and that preference is set
   vscode.window.onDidChangeActiveTextEditor((e) => {
